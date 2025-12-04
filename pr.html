@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procurement Test Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwindcss.config = {
+            darkMode: "class",
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+        * {
+            font-family: "Inter", sans-serif;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-transition {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #3b82f6;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .metric-card {
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .dark .scrollbar-custom::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .test-card {
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .expand-btn {
+            transition: transform 0.3s ease;
+        }
+
+        .expand-btn.expanded {
+            transform: rotate(180deg);
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-passed {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .dark .status-passed {
+            background-color: #064e3b;
+            color: #86efac;
+        }
+
+        .dark .status-failed {
+            background-color: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .dark .progress-bar {
+            background-color: #374151;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+
+<body class="theme-transition bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <!-- Header -->
+    <header class="theme-transition bg-white dark:bg-gray-800 top-0 border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-flask text-3xl text-blue-600 dark:text-blue-400"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Procurement Test Dashboard</h1>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            Performance Test Results & Analysis
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="backBtn"
+                        class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button id="themeToggle"
+                        class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+                        <i class="fas fa-moon text-xl dark:hidden"></i>
+                        <i class="fas fa-sun text-xl hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loading" class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-600 dark:text-gray-400">Loading Test Results...</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="hidden container mx-auto px-6 py-8">
+        <!-- Summary Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div
+                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                            Total Tests
+                        </p>
+                        <p id="totalTests" class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">
+                            0
+                        </p>
+                    </div>
+                    <i class="fas fa-flask text-4xl text-blue-500 opacity-20"></i>
+                </div>
+            </div>
+
+            <div
+                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                            Passed
+                        </p>
+                        <p id="passedTests" class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
+                            0
+                        </p>
+                    </div>
+                    <i class="fas fa-check-circle text-4xl text-green-500 opacity-20"></i>
+                </div>
+            </div>
+
+            <div
+                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-red-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                            Failed
+                        </p>
+                        <p id="failedTests" class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">
+                            0
+                        </p>
+                    </div>
+                    <i class="fas fa-times-circle text-4xl text-red-500 opacity-20"></i>
+                </div>
+            </div>
+
+            <div
+                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                            Test Date
+                        </p>
+                        <p id="testDate" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
+                            -
+                        </p>
+                    </div>
+                    <i class="fas fa-calendar text-4xl text-yellow-500 opacity-20"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critical Issues -->
+        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                Critical Issues
+            </h2>
+            <div id="issuesList" class="space-y-3">
+                <!-- Issues will be populated here -->
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-6 flex items-center">
+                <i class="fas fa-list text-blue-500 mr-3"></i>
+                Test Results by Page
+            </h2>
+            <div id="testResultsList" class="space-y-4">
+                <!-- Test cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Recommendation Section -->
+        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-lightbulb text-amber-500 mr-3"></i>
+                Recommendations
+            </h2>
+            <p id="recommendation" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                <!-- Recommendation will be populated here -->
+            </p>
+        </div>
+    </main>
+
+    <script>
+        // Theme Toggle
+        function initTheme() {
+            const themeToggle = document.getElementById("themeToggle");
+            const htmlElement = document.documentElement;
+
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                htmlElement.classList.add("dark");
+            } else {
+                htmlElement.classList.remove("dark");
+            }
+
+            themeToggle.addEventListener("click", () => {
+                if (htmlElement.classList.contains("dark")) {
+                    htmlElement.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                } else {
+                    htmlElement.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                }
+            });
+        }
+
+        // Back Button
+        document.getElementById("backBtn").addEventListener("click", () => {
+            window.location.href = "index.html";
+        });
+
+        // Fetch and Display Data
+        let testData = null;
+
+        async function loadData() {
+            try {
+                const response = await fetch("./pr.data.json");
+                testData = await response.json();
+
+                displaySummary(testData.testSummary, testData.summary);
+                displayIssues(testData.summary.criticalIssues);
+                displayTestResults(testData.testResults);
+                displayRecommendation(testData.summary.recommendation);
+
+                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("mainContent").classList.remove("hidden");
+                document.getElementById("mainContent").classList.add("fade-in");
+            } catch (error) {
+                console.error("Error loading data:", error);
+                document.getElementById("loading").innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+                        <p class="text-red-600 dark:text-red-400">Error loading test data. Please ensure pr.api.json is in the same directory.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displaySummary(testSummary, summary) {
+            document.getElementById("totalTests").textContent = testSummary.totalTests;
+            document.getElementById("passedTests").textContent = summary.passedTests;
+            document.getElementById("failedTests").textContent = summary.failedTests;
+            document.getElementById("testDate").textContent = testSummary.testDate;
+        }
+
+        function displayIssues(issues) {
+            const issuesList = document.getElementById("issuesList");
+            issuesList.innerHTML = "";
+
+            issues.forEach((issue) => {
+                const issueDiv = document.createElement("div");
+                issueDiv.className =
+                    "flex items-start p-4 theme-transition bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg";
+                issueDiv.innerHTML = `
+                    <i class="fas fa-circle-dot text-red-500 mr-3 mt-1 flex-shrink-0"></i>
+                    <span class="text-gray-700 dark:text-gray-300">${issue}</span>
+                `;
+                issuesList.appendChild(issueDiv);
+            });
+        }
+
+        function displayTestResults(testResults) {
+            const testResultsList = document.getElementById("testResultsList");
+            testResultsList.innerHTML = "";
+
+            testResults.forEach((test, index) => {
+                const statusClass = test.overallResult === "PASSED" ? "status-passed" : "status-failed";
+                const statusIcon = test.overallResult === "PASSED" ? "fa-check-circle" : "fa-times-circle";
+
+                const testCard = document.createElement("div");
+                testCard.className =
+                    "test-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700";
+                testCard.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-lg font-bold">${test.pageName}</h3>
+                                <span class="status-pill ${statusClass}">
+                                    <i class="fas ${statusIcon} mr-1"></i>
+                                    ${test.overallResult}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${test.fileName}</p>
+                        </div>
+                        <button class="expand-btn toggle-expand" data-index="${index}">
+                            <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Avg Response</p>
+                            <p class="text-lg font-bold text-blue-600 dark:text-blue-400">${test.performanceMetrics.avgResponseTime}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Requests</p>
+                            <p class="text-lg font-bold text-green-600 dark:text-green-400">${test.testConfiguration.totalRequests}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Errors</p>
+                            <p class="text-lg font-bold text-red-600 dark:text-red-400">${test.errors.total}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">RPS</p>
+                            <p class="text-lg font-bold text-yellow-600 dark:text-yellow-400">${test.performanceMetrics.requestsPerSecond}</p>
+                        </div>
+                    </div>
+
+                    <div class="hidden expand-details">
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Endpoints</p>
+                                    <div class="space-y-2">
+                                        ${test.endpoints.map(ep => `
+                                            <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                                <span class="text-sm font-medium">${ep.apiName}</span>
+                                                <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded">${ep.method}</span>
+                                            </div>
+                                        `).join("")}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Configuration</p>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span>Duration:</span>
+                                            <span class="font-semibold">${test.testConfiguration.duration}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Max VUs:</span>
+                                            <span class="font-semibold">${test.testConfiguration.maxVUs}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Iterations:</span>
+                                            <span class="font-semibold">${test.testConfiguration.totalIterations}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Actual Duration:</span>
+                                            <span class="font-semibold">${test.testConfiguration.actualDuration}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded mb-4">
+                                <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-3">Test Results</p>
+                                <div class="space-y-3">
+                                    ${test.testResults && Object.entries(test.testResults).map(([key, value]) => {
+                                        if (typeof value === "object" && value.status) {
+                                            return `
+                                                <div>
+                                                    <div class="flex justify-between mb-1">
+                                                        <span class="text-sm">${value.name}</span>
+                                                        <span class="text-xs font-bold">${value.passRate}</span>
+                                                    </div>
+                                                    <div class="progress-bar">
+                                                        <div class="progress-fill" style="width: ${value.passRate}"></div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }
+                                        return "";
+                                    }).join("")}
+                                </div>
+                            </div>
+
+                            ${test.issuesSummary ? `
+                                <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 rounded">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Issues Found</p>
+                                    <ul class="space-y-1">
+                                        ${test.issuesSummary.map(issue => `
+                                            <li class="text-sm text-gray-700 dark:text-gray-300">• ${issue}</li>
+                                        `).join("")}
+                                    </ul>
+                                </div>
+                            ` : ""}
+                        </div>
+                    </div>
+                `;
+
+                testResultsList.appendChild(testCard);
+            });
+
+            // Add toggle functionality
+            document.querySelectorAll(".toggle-expand").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const index = e.currentTarget.dataset.index;
+                    const details = document.querySelectorAll(".expand-details")[index];
+                    const expandBtn = e.currentTarget;
+
+                    details.classList.toggle("hidden");
+                    expandBtn.classList.toggle("expanded");
+                });
+            });
+        }
+
+        function displayRecommendation(recommendation) {
+            document.getElementById("recommendation").textContent = recommendation;
+        }
+
+        // Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            initTheme();
+            loadData();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>k6 Load Test Results Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card.failed {
+            border-left: 5px solid #ef4444;
+        }
+
+        .card.passed {
+            border-left: 5px solid #10b981;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #f0f0f0;
+            color: #333;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .test-section {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section.active {
+            display: block;
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .endpoints {
+            margin-bottom: 30px;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+
+        .endpoint h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .endpoint p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 3px 0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .metric {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-top: 3px solid #667eea;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            color: #333;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .results-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .results-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .pass {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .fail {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .issues {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .issues h4 {
+            color: #991b1b;
+            margin-bottom: 10px;
+        }
+
+        .issues ul {
+            margin-left: 20px;
+            color: #7f1d1d;
+        }
+
+        .issues li {
+            margin: 5px 0;
+        }
+
+        .footer {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 k6 Load Test Results Dashboard</h1>
+            <p>Performance Test Results for Avidus Interactive APIs</p>
+        </div>
+
+        <div class="summary-cards">
+            <div class="card failed">
+                <h3>Total Tests</h3>
+                <div class="number">6</div>
+            </div>
+            <div class="card failed">
+                <h3>Passed</h3>
+                <div class="number">0</div>
+            </div>
+            <div class="card failed">
+                <h3>Failed</h3>
+                <div class="number">6</div>
+            </div>
+            <div class="card">
+                <h3>Total Requests</h3>
+                <div class="number">10,013</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">Rate Comparative</button>
+            <button class="tab-btn" onclick="showTab(1)">Purchase Order</button>
+            <button class="tab-btn" onclick="showTab(2)">RR List</button>
+            <button class="tab-btn" onclick="showTab(3)">Dashboard</button>
+            <button class="tab-btn" onclick="showTab(4)">RR Approval</button>
+            <button class="tab-btn" onclick="showTab(5)">Create RR</button>
+        </div>
+
+        <!-- Rate Comparative -->
+        <div class="test-section active">
+            <h2>Rate Comparative API</h2>
+            
+            <h3 style="margin-top: 20px; color: #333;">Endpoints</h3>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <h4>Rate Approval Status</h4>
+                    <p><strong>URL:</strong> /api/web/rate-approval-status</p>
+                    <p><strong>Method:</strong> GET</p>
+                </div>
+                <div class="endpoint">
+                    <h4>Category</h4>
+                    <p><strong>URL:</strong> /api/web/category</p>
+                    <p><strong>Method:</strong> GET</p>
+                </div>
+                <div class="endpoint">
+                    <h4>Site</h4>
+                    <p><strong>URL:</strong> /api/web/site</p>
+                    <p><strong>Method:</strong> GET</p>
+                </div>
+                <div class="endpoint">
+                    <h4>Rate Approval Filtered</h4>
+                    <p><strong>URL:</strong> /api/web/rate-approval</p>
+                    <p><strong>Method:</strong> GET</p>
+                </div>
+                <div class="endpoint">
+                    <h4>Users</h4>
+                    <p><strong>URL:</strong> /api/web/users/663a083316b02d57048c6eac</p>
+                    <p><strong>Method:</strong> GET</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 20px; color: #333;">Performance Metrics</h3>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">7.68s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">6.48s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">P90 Response Time</div>
+                    <div class="metric-value">16.05s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">P95 Response Time</div>
+                    <div class="metric-value">18.31s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Max Response Time</div>
+                    <div class="metric-value">24.83s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Requests/sec</div>
+                    <div class="metric-value">5.99</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 20px; color: #333;">Test Results</h3>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status Code</th>
+                        <th>Response Time &lt;1000ms</th>
+                        <th>Content Check</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Rate Approval Status</td>
+                        <td class="pass">✓ PASS 100%</td>
+                        <td class="fail">✗ 13%</td>
+                        <td class="pass">✓ PASS 100%</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td class="pass">✓ PASS 100%</td>
+                        <td class="fail">✗ 18%</td>
+                        <td class="pass">✓ PASS 100%</td>
+                    </tr>
+                    <tr>
+                        <td>Site</td>
+                        <td class="pass">✓ PASS 100%</td>
+                        <td class="fail">✗ 9%</td>
+                        <td class="pass">✓ PASS 100%</td>
+                    </tr>
+                    <tr>
+                        <td>Rate Approval Filtered</td>
+                        <td class="pass">✓ PASS 100%</td>
+                        <td class="fail">✗ 0%</td>
+                        <td class="pass">✓ PASS 100%</td>
+                    </tr>
+                    <tr>
+                        <td>Users</td>
+                        <td class="pass">✓ PASS 100%</td>
+                        <td class="fail">✗ 7%</td>
+                        <td class="pass">✓ PASS 100%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ Critical Issues</h4>
+                <ul>
+                    <li>Response times consistently exceed 1000ms threshold</li>
+                    <li>Error rate: 100% threshold exceeded</li>
+                    <li>Only 13% of requests meet performance target</li>
+                    <li>Rate Approval Filtered endpoint at 0% compliance</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Purchase Order -->
+        <div class="test-section">
+            <h2>Purchase Order API</h2>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">2.88s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">1.76s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">P90 Response Time</div>
+                    <div class="metric-value">4.22s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value">743</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status Code</th>
+                        <th>Response Time</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PO Status Count</td>
+                        <td>91%</td>
+                        <td class="fail">26%</td>
+                        <td>91%</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>97%</td>
+                        <td class="fail">34%</td>
+                        <td>97%</td>
+                    </tr>
+                    <tr>
+                        <td>Site</td>
+                        <td>96%</td>
+                        <td class="fail">9%</td>
+                        <td>96%</td>
+                    </tr>
+                    <tr>
+                        <td>Purchase Order</td>
+                        <td>96%</td>
+                        <td class="fail">4%</td>
+                        <td>96%</td>
+                    </tr>
+                    <tr>
+                        <td>Users</td>
+                        <td>99%</td>
+                        <td class="fail">9%</td>
+                        <td>99%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ Critical Issues</h4>
+                <ul>
+                    <li>Connection timeouts at initial load stage</li>
+                    <li>Multiple request timeouts during peak load</li>
+                    <li>HTTP failure rate: 4.03%</li>
+                    <li>Test duration extended significantly: 17m 55s</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RR List -->
+        <div class="test-section">
+            <h2>RR List API</h2>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">21.04s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">24.55s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Max Response Time</div>
+                    <div class="metric-value">30.01s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">HTTP Failure Rate</div>
+                    <div class="metric-value">40.33%</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                        <th>Response Time</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Purchase Request Status</td>
+                        <td>59%</td>
+                        <td class="fail">6%</td>
+                        <td>59%</td>
+                    </tr>
+                    <tr>
+                        <td>Purchase Request</td>
+                        <td>48%</td>
+                        <td class="fail">0%</td>
+                        <td>48%</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>92%</td>
+                        <td class="fail">1%</td>
+                        <td>92%</td>
+                    </tr>
+                    <tr>
+                        <td>Site</td>
+                        <td>52%</td>
+                        <td class="fail">0%</td>
+                        <td>52%</td>
+                    </tr>
+                    <tr>
+                        <td>Users</td>
+                        <td>34%</td>
+                        <td class="fail">0%</td>
+                        <td>34%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ CRITICAL - Severe Issues</h4>
+                <ul>
+                    <li>Widespread request timeouts (30s limit hit)</li>
+                    <li>High connection failure rate: 40.33%</li>
+                    <li>Server unresponsive during load test</li>
+                    <li>All endpoints hitting timeout threshold</li>
+                    <li>Multiple endpoints at 0% compliance</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="test-section">
+            <h2>Dashboard API</h2>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">8.76s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">5.02s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Max Response Time</div>
+                    <div class="metric-value">30.01s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value">1,935</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                        <th>Response Time</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Projects API</td>
+                        <td>88%</td>
+                        <td class="fail">0%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                    <tr>
+                        <td>Users API</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">5%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ Critical Issues</h4>
+                <ul>
+                    <li>Sustained timeout issues throughout 6-minute test</li>
+                    <li>Projects endpoint showing 0% compliance on response time</li>
+                    <li>Data receiving delayed significantly (avg 5.27s)</li>
+                    <li>Error threshold crossed: 1,883 errors</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RR Approval -->
+        <div class="test-section">
+            <h2>RR Approval API</h2>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">2.49s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">2.04s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">P95 Response Time</div>
+                    <div class="metric-value">5.68s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value">2,494</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                        <th>Response Time</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Purchase Request Status</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">25%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">41%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                    <tr>
+                        <td>Site</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">0%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                    <tr>
+                        <td>Purchase Request Filtered</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">0%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                    <tr>
+                        <td>Users</td>
+                        <td class="pass">100%</td>
+                        <td class="fail">12%</td>
+                        <td class="pass">100%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ Issues</h4>
+                <ul>
+                    <li>Site and filtered endpoints at 0% response time compliance</li>
+                    <li>Error threshold exceeded: 2,100 errors</li>
+                    <li>Average response time 2.5x above target</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Create RR -->
+        <div class="test-section">
+            <h2>Create RR API</h2>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Avg Response Time</div>
+                    <div class="metric-value">2.05s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Median Response Time</div>
+                    <div class="metric-value">1.32s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">P95 Response Time</div>
+                    <div class="metric-value">6.79s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value">2,687</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Check</th>
+                        <th>Result</th>
+                        <th>Pass Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Status Code Check</td>
+                        <td class="pass">✓ PASS</td>
+                        <td>100%</td>
+                    </tr>
+                    <tr>
+                        <td>Response Time &lt;1000ms</td>
+                        <td class="fail">✗ FAIL</td>
+                        <td>28%</td>
+                    </tr>
+                    <tr>
+                        <td>Content Validation</td>
+                        <td class="pass">✓ PASS</td>
+                        <td>100%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="issues">
+                <h4>⚠️ Issues</h4>
+                <ul>
+                    <li>POST endpoint showing better performance than GET endpoints</li>
+                    <li>Only 28% of requests meet 1000ms target</li>
+                    <li>Error rate threshold exceeded: 1,912 errors</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3 style="color: #333; margin-bottom: 15px;">Overall Recommendations</h3>
+            <p><strong>CRITICAL:</strong> Infrastructure requires immediate performance optimization including:</p>
+            <ul style="text-align: left; display: inline-block; margin-top: 10px;">
+                <li>Database query optimization</li>
+                <li>Implement caching strategies (Redis/Memcached)</li>
+                <li>Configure load balancer for better distribution</li>
+                <li>Increase server resource allocation</li>
+                <li>Review and optimize slow endpoints (Site, Rate Approval)</li>
+                <li>Implement connection pooling</li>
+            </ul>
+            <p style="margin-top: 20px; color: #999; font-size: 0.9em;">Generated: December 4, 2025 | All tests failed performance thresholds</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(index) {
+            const sections = document.querySelectorAll('.test-section');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            sections.forEach(section => section.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            sections[index].classList.add('active');
+            buttons[index].classList.add('active');
+        }
+    </script>
+</body>
+</html>

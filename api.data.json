@@ -1,0 +1,425 @@
+{
+    "testDate": "2025-12-04",
+    "apis": [
+        {
+            "apiName": "Location",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/location",
+            "avgResTime": "612.09ms",
+            "minResTime": "488.39ms",
+            "medResTime": "541.32ms",
+            "maxResTime": "1.71s",
+            "p90": "846.16ms",
+            "p95": "979.22ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Structure",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/structure",
+            "avgResTime": "592.24ms",
+            "minResTime": "495.25ms",
+            "medResTime": "552.64ms",
+            "maxResTime": "2.17s",
+            "p90": "731.08ms",
+            "p95": "791.66ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "99%",
+                "successCount": 1896,
+                "failCount": 1
+            }
+        },
+        {
+            "apiName": "Activity",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/activity",
+            "avgResTime": "588.28ms",
+            "minResTime": "492.11ms",
+            "medResTime": "545.77ms",
+            "maxResTime": "1.6s",
+            "p90": "767.39ms",
+            "p95": "795.24ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "UOM",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/uom",
+            "avgResTime": "585.96ms",
+            "minResTime": "490.75ms",
+            "medResTime": "548.19ms",
+            "maxResTime": "870.13ms",
+            "p90": "730.13ms",
+            "p95": "802.43ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Item",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/item?page=1&per_page=20",
+            "avgResTime": "1.76s",
+            "minResTime": "1.01s",
+            "medResTime": "1.64s",
+            "maxResTime": "3.92s",
+            "p90": "2.66s",
+            "p95": "2.8s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "66%",
+                "successCount": 746,
+                "failCount": 383
+            }
+        },
+        {
+            "apiName": "Brand",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/brand",
+            "avgResTime": "1.58s",
+            "minResTime": "992.18ms",
+            "medResTime": "1.42s",
+            "maxResTime": "3.97s",
+            "p90": "2.45s",
+            "p95": "2.56s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "72%",
+                "successCount": 871,
+                "failCount": 329
+            }
+        },
+        {
+            "apiName": "Organization",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/organisation",
+            "avgResTime": "589.85ms",
+            "minResTime": "496.5ms",
+            "medResTime": "548.09ms",
+            "maxResTime": "1s",
+            "p90": "762.78ms",
+            "p95": "828.61ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Site",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/site",
+            "avgResTime": "3.49s",
+            "minResTime": "1.03s",
+            "medResTime": "3.4s",
+            "maxResTime": "7.09s",
+            "p90": "5.95s",
+            "p95": "6.16s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "26%",
+                "successCount": 193,
+                "failCount": 542
+            }
+        },
+        {
+            "apiName": "Site Staff",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/siteStaff?page=1&per_page=10",
+            "avgResTime": "1.49s",
+            "minResTime": "682.52ms",
+            "medResTime": "1.3s",
+            "maxResTime": "3.07s",
+            "p90": "2.7s",
+            "p95": "2.81s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "73%",
+                "successCount": 917,
+                "failCount": 331
+            }
+        },
+        {
+            "apiName": "Contractor",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/contractor?page=1&per_page=10",
+            "avgResTime": "1.44s",
+            "minResTime": "676.64ms",
+            "medResTime": "1.29s",
+            "maxResTime": "2.76s",
+            "p90": "2.44s",
+            "p95": "2.56s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "71%",
+                "successCount": 902,
+                "failCount": 368
+            }
+        },
+        {
+            "apiName": "Vendor",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/vendor?page=1&per_page=20",
+            "avgResTime": "7.75s",
+            "minResTime": "1.18s",
+            "medResTime": "7.62s",
+            "maxResTime": "15.07s",
+            "p90": "13.56s",
+            "p95": "14.24s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "7%",
+                "successCount": 33,
+                "failCount": 394
+            }
+        },
+        {
+            "apiName": "Category",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/category",
+            "avgResTime": "591.36ms",
+            "minResTime": "491.68ms",
+            "medResTime": "541.51ms",
+            "maxResTime": "1.09s",
+            "p90": "756.98ms",
+            "p95": "849.77ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Sub Category",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/subcategory",
+            "avgResTime": "1.89s",
+            "minResTime": "1.32s",
+            "medResTime": "1.63s",
+            "maxResTime": "3.07s",
+            "p90": "2.78s",
+            "p95": "2.92s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "66%",
+                "successCount": 717,
+                "failCount": 361
+            }
+        },
+        {
+            "apiName": "Miscellaneous Config",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/miscellaneousConfig",
+            "avgResTime": "596.01ms",
+            "minResTime": "490.6ms",
+            "medResTime": "545.13ms",
+            "maxResTime": "1.16s",
+            "p90": "806.95ms",
+            "p95": "852.09ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Notification Type",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/notification_type",
+            "avgResTime": "586.43ms",
+            "minResTime": "489.42ms",
+            "medResTime": "542.91ms",
+            "maxResTime": "1.08s",
+            "p90": "754.14ms",
+            "p95": "814.89ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Super Admin",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/roles/role/superadmin",
+            "avgResTime": "626.41ms",
+            "minResTime": "492.74ms",
+            "medResTime": "567.74ms",
+            "maxResTime": "2.56s",
+            "p90": "834.83ms",
+            "p95": "872.27ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "99%",
+                "successCount": 1859,
+                "failCount": 1
+            }
+        },
+        {
+            "apiName": "Users",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/users?page=1&limit=20&order=asc",
+            "avgResTime": "659.23ms",
+            "minResTime": "488.25ms",
+            "medResTime": "576.38ms",
+            "maxResTime": "2.13s",
+            "p90": "846.68ms",
+            "p95": "1.04s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "99%",
+                "successCount": 1813,
+                "failCount": 4
+            }
+        },
+        {
+            "apiName": "Roles",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/roles?page=1&limit=10&order=asc",
+            "avgResTime": "1.44s",
+            "minResTime": "683.43ms",
+            "medResTime": "1.29s",
+            "maxResTime": "2.69s",
+            "p90": "2.41s",
+            "p95": "2.52s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "72%",
+                "successCount": 918,
+                "failCount": 352
+            }
+        },
+        {
+            "apiName": "Recent Activity",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/recentActivity",
+            "avgResTime": "1.63s",
+            "minResTime": "738.56ms",
+            "medResTime": "1.49s",
+            "maxResTime": "2.78s",
+            "p90": "2.46s",
+            "p95": "2.59s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "70%",
+                "successCount": 831,
+                "failCount": 351
+            }
+        },
+        {
+            "apiName": "Projects",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/projects",
+            "avgResTime": "2.3s",
+            "minResTime": "895.78ms",
+            "medResTime": "2.05s",
+            "maxResTime": "6.98s",
+            "p90": "3.56s",
+            "p95": "4.31s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "46%",
+                "successCount": 426,
+                "failCount": 496
+            }
+        },
+        {
+            "apiName": "DMR Purchase Order",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/dmr_purchase_order?userId=663a083316b02d57048c6eac&page=1&per_page=20&site=&vendor=&po_number=&pr=&item=&local_purchase=&DMR_No=&prType=&startDate=&endDate=",
+            "avgResTime": "5.41s",
+            "minResTime": "1.17s",
+            "medResTime": "4.8s",
+            "maxResTime": "16.46s",
+            "p90": "10.26s",
+            "p95": "11.44s",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "9%",
+                "successCount": 48,
+                "failCount": 480
+            }
+        },
+        {
+            "apiName": "Order Status Count",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/dmr_purchase_order/order-status-count?userId=663a083316b02d57048c6eac&page=1&per_page=20&site=&vendor=&po_number=&pr=&item=&local_purchase=&DMR_No=&prType=&startDate=&endDate=",
+            "avgResTime": "376.95ms",
+            "minResTime": "317.35ms",
+            "medResTime": "358.12ms",
+            "maxResTime": "1.05s",
+            "p90": "402.22ms",
+            "p95": "491.16ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Inventory Report",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/inventory-report?page=1&limit=50&userId=663a083316b02d57048c6eac&sortBy=updated_at&sortOrder=desc",
+            "avgResTime": "356.49ms",
+            "minResTime": "314.33ms",
+            "medResTime": "353.41ms",
+            "maxResTime": "930.35ms",
+            "p90": "376.84ms",
+            "p95": "384.47ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Issue Material Record",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/issued_material_record?page=1&per_page=20&sort_by=updated_at&sort_order=desc",
+            "avgResTime": "353.31ms",
+            "minResTime": "311.97ms",
+            "medResTime": "349.87ms",
+            "maxResTime": "948.73ms",
+            "p90": "374.11ms",
+            "p95": "383.13ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": true
+            }
+        },
+        {
+            "apiName": "Inventory Transfer",
+            "apiUrl": "https://pr.avidusinteractive.com/api/web/inventory-transfer",
+            "avgResTime": "405.55ms",
+            "minResTime": "304.2ms",
+            "medResTime": "347.09ms",
+            "maxResTime": "2.95s",
+            "p90": "412.98ms",
+            "p95": "555.54ms",
+            "statusCheck": {
+                "isAcceptable": true,
+                "responseTimeUnder2s": false,
+                "successRate": "98%",
+                "successCount": 2085,
+                "failCount": 31
+            }
+        }
+    ],
+    "summary": {
+        "totalApis": 25,
+        "performanceIssues": [
+            {
+                "apiName": "Vendor",
+                "issue": "Very slow response time (avg 7.75s, max 15.07s)",
+                "successRate": "7%"
+            },
+            {
+                "apiName": "DMR Purchase Order",
+                "issue": "Very slow response time (avg 5.41s, max 16.46s)",
+                "successRate": "9%"
+            },
+            {
+                "apiName": "Site",
+                "issue": "Slow response time (avg 3.49s, max 7.09s)",
+                "successRate": "26%"
+            },
+            {
+                "apiName": "Projects",
+                "issue": "Inconsistent performance (avg 2.3s, max 6.98s)",
+                "successRate": "46%"
+            }
+        ]
+    }
+}

@@ -1,0 +1,453 @@
+{
+  "testSummary": {
+    "totalTests": 6,
+    "testDate": "2025-12-04",
+    "allPassed": false
+  },
+  "testResults": [
+    {
+      "pageName": "Rate Comparative",
+      "fileName": "rate.comparative.api.js",
+      "endpoints": [
+        {
+          "apiName": "Rate Approval Status",
+          "url": "https://pr.avidusinteractive.com/api/web/rate-approval-status",
+          "method": "GET"
+        },
+        {
+          "apiName": "Category",
+          "url": "https://pr.avidusinteractive.com/api/web/category",
+          "method": "GET"
+        },
+        {
+          "apiName": "Site",
+          "url": "https://pr.avidusinteractive.com/api/web/site",
+          "method": "GET"
+        },
+        {
+          "apiName": "Rate Approval Filtered",
+          "url": "https://pr.avidusinteractive.com/api/web/rate-approval",
+          "method": "GET"
+        },
+        {
+          "apiName": "Users",
+          "url": "https://pr.avidusinteractive.com/api/web/users/663a083316b02d57048c6eac",
+          "method": "GET"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "2m 45s",
+        "maxVUs": 100,
+        "totalRequests": 1134,
+        "totalIterations": 195,
+        "actualDuration": "3m 9.3s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "7.68s",
+        "medianResponseTime": "6.48s",
+        "p90ResponseTime": "16.05s",
+        "p95ResponseTime": "18.31s",
+        "maxResponseTime": "24.83s",
+        "minResponseTime": "527.76ms",
+        "avgGroupDuration": "7.75s",
+        "requestsPerSecond": 5.99
+      },
+      "testResults": {
+        "statusCodeCheck": {
+          "name": "status is 200 or 304",
+          "status": "PASSED",
+          "passRate": "100%"
+        },
+        "responseTimeCheck": {
+          "name": "response time < 1000ms",
+          "status": "FAILED",
+          "passRate": "13%",
+          "byEndpoint": {
+            "rateApprovalStatus": "13%",
+            "category": "18%",
+            "site": "9%",
+            "rateApprovalFiltered": "0%",
+            "users": "7%"
+          }
+        },
+        "contentValidation": {
+          "name": "has content",
+          "status": "PASSED",
+          "passRate": "100%"
+        }
+      },
+      "errors": {
+        "total": 1019,
+        "failureRate": "100%",
+        "status": "FAILED"
+      },
+      "overallResult": "FAILED"
+    },
+    {
+      "pageName": "Purchase Order",
+      "fileName": "purchase.order.api.js",
+      "endpoints": [
+        {
+          "apiName": "PO Status Count",
+          "url": "https://pr.avidusinteractive.com/api/web/getPOStatusCount",
+          "method": "GET"
+        },
+        {
+          "apiName": "Category",
+          "url": "https://pr.avidusinteractive.com/api/web/category",
+          "method": "GET"
+        },
+        {
+          "apiName": "Site",
+          "url": "https://pr.avidusinteractive.com/api/web/site",
+          "method": "GET"
+        },
+        {
+          "apiName": "Purchase Order",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase_order",
+          "method": "GET"
+        },
+        {
+          "apiName": "Users",
+          "url": "https://pr.avidusinteractive.com/api/web/users/663a083316b02d57048c6eac",
+          "method": "GET"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "2m 45s",
+        "maxVUs": 100,
+        "totalRequests": 743,
+        "totalIterations": 106,
+        "actualDuration": "17m 55.2s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "2.88s",
+        "medianResponseTime": "1.76s",
+        "p90ResponseTime": "4.22s",
+        "p95ResponseTime": "7.34s",
+        "maxResponseTime": "30s",
+        "minResponseTime": "0s",
+        "avgGroupDuration": "3.76s",
+        "requestsPerSecond": 0.69
+      },
+      "testResults": {
+        "poStatusCount": {
+          "statusCheck": "91% pass rate",
+          "responseTimeCheck": "26% pass rate",
+          "contentCheck": "91% pass rate"
+        },
+        "category": {
+          "statusCheck": "97% pass rate",
+          "responseTimeCheck": "34% pass rate",
+          "contentCheck": "97% pass rate"
+        },
+        "site": {
+          "statusCheck": "96% pass rate",
+          "responseTimeCheck": "9% pass rate",
+          "contentCheck": "96% pass rate"
+        },
+        "purchaseOrder": {
+          "statusCheck": "96% pass rate",
+          "responseTimeCheck": "4% pass rate",
+          "contentCheck": "96% pass rate"
+        },
+        "users": {
+          "statusCheck": "99% pass rate",
+          "responseTimeCheck": "9% pass rate",
+          "contentCheck": "99% pass rate"
+        }
+      },
+      "errors": {
+        "total": 621,
+        "failureRate": "100%",
+        "httpFailureRate": "4.03%",
+        "status": "FAILED"
+      },
+      "issuesSummary": [
+        "Connection timeouts at initial load",
+        "Multiple request timeouts during peak load",
+        "Response times exceeding 1000ms threshold"
+      ],
+      "overallResult": "FAILED"
+    },
+    {
+      "pageName": "RR List",
+      "fileName": "rr.list.api.js",
+      "endpoints": [
+        {
+          "apiName": "Purchase Request Status",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase-request-status",
+          "method": "GET"
+        },
+        {
+          "apiName": "Purchase Request",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase-request",
+          "method": "GET"
+        },
+        {
+          "apiName": "Category",
+          "url": "https://pr.avidusinteractive.com/api/web/category",
+          "method": "GET"
+        },
+        {
+          "apiName": "Site",
+          "url": "https://pr.avidusinteractive.com/api/web/site",
+          "method": "GET"
+        },
+        {
+          "apiName": "Users",
+          "url": "https://pr.avidusinteractive.com/api/web/users/663a083316b02d57048c6eac",
+          "method": "GET"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "2m 45s",
+        "maxVUs": 100,
+        "totalRequests": 424,
+        "totalIterations": 41,
+        "actualDuration": "3m 15s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "21.04s",
+        "medianResponseTime": "24.55s",
+        "p90ResponseTime": "30s",
+        "p95ResponseTime": "30s",
+        "maxResponseTime": "30.01s",
+        "minResponseTime": "663.42ms",
+        "avgGroupDuration": "21.49s",
+        "requestsPerSecond": 2.17
+      },
+      "testResults": {
+        "purchaseRequestStatus": {
+          "statusCheck": "59% pass rate",
+          "responseTimeCheck": "6% pass rate",
+          "contentCheck": "59% pass rate"
+        },
+        "purchaseRequest": {
+          "statusCheck": "48% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "48% pass rate"
+        },
+        "category": {
+          "statusCheck": "92% pass rate",
+          "responseTimeCheck": "1% pass rate",
+          "contentCheck": "92% pass rate"
+        },
+        "site": {
+          "statusCheck": "52% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "52% pass rate"
+        },
+        "users": {
+          "statusCheck": "34% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "34% pass rate"
+        }
+      },
+      "errors": {
+        "total": 414,
+        "failureRate": "100%",
+        "httpFailureRate": "40.33%",
+        "status": "FAILED"
+      },
+      "issuesSummary": [
+        "Widespread request timeouts",
+        "High connection failure rate",
+        "Server unresponsive during load test",
+        "All endpoints hit timeout threshold"
+      ],
+      "overallResult": "FAILED"
+    },
+    {
+      "pageName": "Dashboard",
+      "fileName": "dashboard.api.js",
+      "endpoints": [
+        {
+          "apiName": "Projects API",
+          "url": "https://pr.avidusinteractive.com/api/web/projects",
+          "method": "GET"
+        },
+        {
+          "apiName": "Users API",
+          "url": "https://pr.avidusinteractive.com/api/web/users/663a083316b02d57048c6eac",
+          "method": "GET"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "6m 0s",
+        "maxVUs": 100,
+        "totalRequests": 1935,
+        "totalIterations": 964,
+        "actualDuration": "6m 6s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "8.76s",
+        "medianResponseTime": "5.02s",
+        "p90ResponseTime": "24.17s",
+        "p95ResponseTime": "30s",
+        "maxResponseTime": "30.01s",
+        "minResponseTime": "915.8ms",
+        "avgGroupDuration": "9.03s",
+        "requestsPerSecond": 5.29
+      },
+      "testResults": {
+        "projectsAPI": {
+          "statusCheck": "88% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "100% pass rate"
+        },
+        "usersAPI": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "5% pass rate",
+          "contentCheck": "100% pass rate"
+        }
+      },
+      "errors": {
+        "total": 1883,
+        "failureRate": "100%",
+        "httpFailureRate": "5.99%",
+        "status": "FAILED"
+      },
+      "issuesSummary": [
+        "Sustained timeout issues throughout test",
+        "Projects endpoint showing 0% compliance on response time",
+        "Data receiving delayed significantly"
+      ],
+      "overallResult": "FAILED"
+    },
+    {
+      "pageName": "RR Approval",
+      "fileName": "rr.approval.api.js",
+      "endpoints": [
+        {
+          "apiName": "Purchase Request Status",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase-request-status",
+          "method": "GET"
+        },
+        {
+          "apiName": "Category",
+          "url": "https://pr.avidusinteractive.com/api/web/category",
+          "method": "GET"
+        },
+        {
+          "apiName": "Site",
+          "url": "https://pr.avidusinteractive.com/api/web/site",
+          "method": "GET"
+        },
+        {
+          "apiName": "Purchase Request Filtered",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase-request",
+          "method": "GET"
+        },
+        {
+          "apiName": "Users",
+          "url": "https://pr.avidusinteractive.com/api/web/users/663a083316b02d57048c6eac",
+          "method": "GET"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "2m 45s",
+        "maxVUs": 100,
+        "totalRequests": 2494,
+        "totalIterations": 498,
+        "actualDuration": "2m 54s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "2.49s",
+        "medianResponseTime": "2.04s",
+        "p90ResponseTime": "4.54s",
+        "p95ResponseTime": "5.68s",
+        "maxResponseTime": "22.54s",
+        "minResponseTime": "495.93ms",
+        "avgGroupDuration": "2.53s",
+        "requestsPerSecond": 14.34
+      },
+      "testResults": {
+        "purchaseRequestStatus": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "25% pass rate",
+          "contentCheck": "100% pass rate"
+        },
+        "category": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "41% pass rate",
+          "contentCheck": "100% pass rate"
+        },
+        "site": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "100% pass rate"
+        },
+        "purchaseRequestFiltered": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "0% pass rate",
+          "contentCheck": "100% pass rate"
+        },
+        "users": {
+          "statusCheck": "100% pass rate",
+          "responseTimeCheck": "12% pass rate",
+          "contentCheck": "100% pass rate"
+        }
+      },
+      "errors": {
+        "total": 2100,
+        "failureRate": "100%",
+        "httpFailureRate": "0%",
+        "status": "FAILED"
+      },
+      "overallResult": "FAILED"
+    },
+    {
+      "pageName": "Create RR",
+      "fileName": "create.rr.api.js",
+      "endpoints": [
+        {
+          "apiName": "Create Purchase Request",
+          "url": "https://pr.avidusinteractive.com/api/web/purchase-request",
+          "method": "POST"
+        }
+      ],
+      "testConfiguration": {
+        "duration": "2m 45s",
+        "maxVUs": 100,
+        "totalRequests": 2687,
+        "totalIterations": 2687,
+        "actualDuration": "2m 46.4s"
+      },
+      "performanceMetrics": {
+        "avgResponseTime": "2.05s",
+        "medianResponseTime": "1.32s",
+        "p90ResponseTime": "4.23s",
+        "p95ResponseTime": "6.79s",
+        "maxResponseTime": "19.1s",
+        "minResponseTime": "504.15ms",
+        "requestsPerSecond": 16.15
+      },
+      "testResults": {
+        "statusCheck": "100% pass rate",
+        "responseTimeCheck": "28% pass rate",
+        "contentCheck": "100% pass rate"
+      },
+      "errors": {
+        "total": 1912,
+        "failureRate": "100%",
+        "httpFailureRate": "0%",
+        "status": "FAILED"
+      },
+      "overallResult": "FAILED"
+    }
+  ],
+  "summary": {
+    "totalTestsRun": 6,
+    "passedTests": 0,
+    "failedTests": 6,
+    "criticalIssues": [
+      "All endpoints consistently exceed 1000ms response time threshold",
+      "Error rate threshold exceeded across all tests",
+      "Multiple connection timeouts and server unresponsiveness",
+      "Site endpoint showing critical performance degradation",
+      "Need immediate server optimization and capacity increase"
+    ],
+    "recommendation": "Infrastructure requires immediate performance optimization including database query optimization, caching implementation, load balancer configuration, and server resource allocation increase"
+  }
+}
