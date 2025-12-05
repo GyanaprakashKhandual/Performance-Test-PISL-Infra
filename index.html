@@ -58,7 +58,7 @@
         }
 
         .container {
-            max-width: 1280px;
+            min-width: 100vh;
             margin: 0 auto;
             padding: 0 1.5rem;
         }
@@ -200,6 +200,7 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -227,6 +228,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -478,7 +480,9 @@
         }
 
         .table-wrapper {
-            overflow-x: auto;
+             max-height: 100vh; /* add this */
+    overflow-y: auto; /* move scroll here */
+    overflow-x: auto;
         }
 
         .table-wrapper::-webkit-scrollbar {
@@ -507,7 +511,11 @@
 
         thead {
             background-color: var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
+
 
         th {
             padding: 1rem 1.5rem;
@@ -760,7 +768,8 @@
                 font-size: 0.875rem;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 0.75rem 1rem;
             }
         }
@@ -852,7 +861,8 @@
                 <div class="filter-container">
                     <div class="search-wrapper">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search APIs by name or URL..." />
+                        <input type="text" id="searchInput" class="search-input"
+                            placeholder="Search APIs by name or URL..." />
                     </div>
                     <div class="dropdown-container">
                         <button id="filterStatusTrigger" class="dropdown-trigger">
@@ -862,8 +872,8 @@
                         <div id="filterStatusMenu" class="dropdown-menu">
                             <button data-value="all">All Status</button>
                             <button data-value="healthy">Healthy (< 2s)</button>
-                            <button data-value="warning">Warning (2-5s)</button>
-                            <button data-value="critical">Critical (> 5s)</button>
+                                    <button data-value="warning">Warning (2-5s)</button>
+                                    <button data-value="critical">Critical (> 5s)</button>
                         </div>
                     </div>
                 </div>
