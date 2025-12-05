@@ -5,19 +5,217 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Performance Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwindcss.config = {
-            darkMode: "class",
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.16.4/framer-motion.min.js"></script>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: "Inter", sans-serif;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --yellow-500: #eab308;
+            --yellow-600: #ca8a04;
+        }
+
+        body.dark {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --border-color: #374151;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-icon {
+            font-size: 1.875rem;
+            color: var(--blue-600);
+        }
+
+        body.dark .header-icon {
+            color: var(--blue-500);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--blue-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--blue-700);
+        }
+
+        body.dark .btn-primary {
+            background-color: var(--blue-500);
+        }
+
+        body.dark .btn-primary:hover {
+            background-color: var(--blue-600);
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-icon:hover {
+            background-color: var(--border-color);
+        }
+
+        body.dark .btn-icon {
+            background-color: var(--bg-tertiary);
+        }
+
+        body.dark .btn-icon:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-icon i {
+            font-size: 1.25rem;
+        }
+
+        .dark-icon {
+            display: none;
+        }
+
+        body.dark .light-icon {
+            display: none;
+        }
+
+        body.dark .dark-icon {
+            display: inline;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--blue-600);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .fade-in {
@@ -29,111 +227,216 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .row-hover {
-            transition: all 0.3s ease;
-        }
-
-        .row-hover:hover {
-            transform: translateX(5px);
-        }
-
-        .status-badge {
-            transition: all 0.3s ease;
-        }
-
-        .status-badge:hover {
-            transform: scale(1.05);
-        }
-
-        .theme-transition {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .loading-spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 3px solid #3b82f6;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .metric-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .metric-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
-        .scrollbar-custom::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .metric-card.blue {
+            border-left: 4px solid var(--blue-500);
         }
 
-        .scrollbar-custom::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .metric-card.green {
+            border-left: 4px solid var(--green-500);
         }
 
-        .scrollbar-custom::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
+        .metric-card.red {
+            border-left: 4px solid var(--red-500);
         }
 
-        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .metric-card.yellow {
+            border-left: 4px solid var(--yellow-500);
         }
 
-        .dark .scrollbar-custom::-webkit-scrollbar-track {
-            background: #374151;
+        .metric-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .dark .scrollbar-custom::-webkit-scrollbar-thumb {
-            background: #6b7280;
+        .metric-info p:first-child {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
         }
 
-        .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+        .metric-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .metric-value.blue {
+            color: var(--blue-600);
+        }
+
+        body.dark .metric-value.blue {
+            color: var(--blue-500);
+        }
+
+        .metric-value.green {
+            color: var(--green-600);
+        }
+
+        body.dark .metric-value.green {
+            color: var(--green-500);
+        }
+
+        .metric-value.red {
+            color: var(--red-600);
+        }
+
+        body.dark .metric-value.red {
+            color: var(--red-500);
+        }
+
+        .metric-value.yellow {
+            color: var(--yellow-600);
+        }
+
+        body.dark .metric-value.yellow {
+            color: var(--yellow-500);
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+
+        .metric-icon.blue {
+            color: var(--blue-500);
+        }
+
+        .metric-icon.green {
+            color: var(--green-500);
+        }
+
+        .metric-icon.red {
+            color: var(--red-500);
+        }
+
+        .metric-icon.yellow {
+            color: var(--yellow-500);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .filter-container {
+                flex-direction: row;
+            }
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .dropdown-container {
+            position: relative;
+            min-width: 200px;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--bg-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .dropdown-trigger:hover {
+            border-color: var(--text-tertiary);
+        }
+
+        .dropdown-trigger.active {
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .dropdown-menu {
             position: absolute;
             top: 100%;
             left: 0;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
             z-index: 50;
-            min-width: 200px;
+            margin-top: 0.25rem;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.2s ease;
-        }
-
-        .dark .dropdown-menu {
-            background: #1f2937;
-            border-color: #374151;
         }
 
         .dropdown-menu.active {
@@ -145,98 +448,345 @@
         .dropdown-menu button {
             width: 100%;
             text-align: left;
-            padding: 10px 16px;
+            padding: 0.625rem 1rem;
             border: none;
             background: none;
             cursor: pointer;
-            font-size: 14px;
-            color: #374151;
+            font-size: 0.875rem;
+            color: var(--text-primary);
             transition: background-color 0.2s ease;
         }
 
-        .dark .dropdown-menu button {
-            color: #d1d5db;
-        }
-
         .dropdown-menu button:hover {
-            background-color: #f3f4f6;
-        }
-
-        .dark .dropdown-menu button:hover {
-            background-color: #374151;
+            background-color: var(--bg-tertiary);
         }
 
         .dropdown-menu button:first-child {
-            border-radius: 8px 8px 0 0;
+            border-radius: 0.5rem 0.5rem 0 0;
         }
 
         .dropdown-menu button:last-child {
-            border-radius: 0 0 8px 8px;
+            border-radius: 0 0 0.5rem 0.5rem;
         }
 
-        .dropdown-container {
-            position: relative;
+        /* Table Section */
+        .table-section {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
-        .dropdown-trigger {
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--text-tertiary);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tbody tr {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateX(5px);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+        }
+
+        .api-name-cell {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .api-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .api-url {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .time-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .time-value.avg {
+            color: var(--blue-600);
+        }
+
+        body.dark .time-value.avg {
+            color: var(--blue-500);
+        }
+
+        .time-value.min {
+            color: var(--green-600);
+        }
+
+        body.dark .time-value.min {
+            color: var(--green-500);
+        }
+
+        .time-value.max {
+            color: var(--red-600);
+        }
+
+        body.dark .time-value.max {
+            color: var(--red-500);
+        }
+
+        .time-value.neutral {
+            color: var(--text-primary);
+        }
+
+        .success-rate-cell {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            color: #374151;
-            transition: all 0.2s ease;
+            gap: 0.5rem;
         }
 
-        .dark .dropdown-trigger {
-            background: #1f2937;
-            border-color: #374151;
-            color: #d1d5db;
+        .progress-bar {
+            flex: 1;
+            height: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 9999px;
+            overflow: hidden;
         }
 
-        .dropdown-trigger:hover {
-            border-color: #9ca3af;
+        .progress-fill {
+            height: 100%;
+            background-color: var(--green-500);
+            border-radius: 9999px;
+            transition: width 0.3s ease;
         }
 
-        .dark .dropdown-trigger:hover {
-            border-color: #6b7280;
+        .success-rate-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 40px;
         }
 
-        .dropdown-trigger.active {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .status-badge.healthy {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--green-600);
+        }
+
+        body.dark .status-badge.healthy {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: var(--green-500);
+        }
+
+        .status-badge.warning {
+            background-color: rgba(234, 179, 8, 0.1);
+            color: var(--yellow-600);
+        }
+
+        body.dark .status-badge.warning {
+            background-color: rgba(234, 179, 8, 0.2);
+            color: var(--yellow-500);
+        }
+
+        .status-badge.critical {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--red-600);
+        }
+
+        body.dark .status-badge.critical {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--red-500);
+        }
+
+        /* Issues Section */
+        .issues-section {
+            margin-top: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .issues-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .issues-title i {
+            color: var(--red-500);
+        }
+
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .issue-card {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--red-500);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        body.dark .issue-card {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .issue-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .issue-icon {
+            color: var(--red-500);
+            margin-top: 0.25rem;
+        }
+
+        .issue-info {
+            flex: 1;
+        }
+
+        .issue-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .issue-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-rate {
+            font-size: 0.875rem;
+            color: var(--red-600);
+        }
+
+        body.dark .issue-rate {
+            color: var(--red-500);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+
+            th, td {
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 </head>
 
-<body class="theme-transition bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body>
     <!-- Header -->
-    <header class="theme-transition bg-white dark:bg-gray-800 top-0">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-chart-line text-3xl text-blue-600 dark:text-blue-400"></i>
-                    <div>
-                        <h1 class="text-2xl font-bold">API Performance Dashboard</h1>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Real-time API Monitoring
-                        </p>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <i class="fas fa-chart-line header-icon"></i>
+                    <div class="header-title">
+                        <h1>API Performance Dashboard</h1>
+                        <p>Real-time API Monitoring</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button id="procurementBtn"
-                        class="px-4 py-2 rounded-lg bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium transition-all duration-300 flex items-center space-x-2">
+                <div class="header-right">
+                    <button id="procurementBtn" class="btn btn-primary">
                         <i class="fas fa-flask"></i>
                         <span>Procurement Test</span>
                     </button>
-                    <button id="themeToggle"
-                        class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
-                        <i class="fas fa-moon text-xl dark:hidden"></i>
-                        <i class="fas fa-sun text-xl hidden dark:inline"></i>
+                    <button id="themeToggle" class="btn btn-icon">
+                        <i class="fas fa-moon light-icon"></i>
+                        <i class="fas fa-sun dark-icon"></i>
                     </button>
                 </div>
             </div>
@@ -244,158 +794,113 @@
     </header>
 
     <!-- Loading State -->
-    <div id="loading" class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Loading API Data...</p>
+    <div id="loading" class="loading-container">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading API Data...</p>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main id="mainContent" class="hidden container mx-auto px-6 py-8">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6 border-l-4 border-blue-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Total APIs
-                        </p>
-                        <p id="totalApis" class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-                            0
-                        </p>
+    <main id="mainContent" class="hidden">
+        <div class="container">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="metric-card blue">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Total APIs</p>
+                            <p id="totalApis" class="metric-value blue">0</p>
+                        </div>
+                        <i class="fas fa-server metric-icon blue"></i>
                     </div>
-                    <i class="fas fa-server text-4xl text-blue-500 opacity-20"></i>
                 </div>
-            </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6 border-l-4 border-green-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Healthy APIs
-                        </p>
-                        <p id="healthyApis" class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
-                            0
-                        </p>
+                <div class="metric-card green">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Healthy APIs</p>
+                            <p id="healthyApis" class="metric-value green">0</p>
+                        </div>
+                        <i class="fas fa-check-circle metric-icon green"></i>
                     </div>
-                    <i class="fas fa-check-circle text-4xl text-green-500 opacity-20"></i>
                 </div>
-            </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6 border-l-4 border-red-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Critical Issues
-                        </p>
-                        <p id="criticalApis" class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">
-                            0
-                        </p>
+                <div class="metric-card red">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Critical Issues</p>
+                            <p id="criticalApis" class="metric-value red">0</p>
+                        </div>
+                        <i class="fas fa-exclamation-triangle metric-icon red"></i>
                     </div>
-                    <i class="fas fa-exclamation-triangle text-4xl text-red-500 opacity-20"></i>
                 </div>
-            </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6 border-l-4 border-yellow-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Avg Response
-                        </p>
-                        <p id="avgResponse" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
-                            0ms
-                        </p>
-                    </div>
-                    <i class="fas fa-clock text-4xl text-yellow-500 opacity-20"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filter and Search -->
-        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="searchInput" placeholder="Search APIs by name or URL..."
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
-                    </div>
-                </div>
-                <div class="dropdown-container">
-                    <button id="filterStatusTrigger" class="dropdown-trigger w-full md:w-auto">
-                        <span id="filterStatusLabel">All Status</span>
-                        <i class="fas fa-chevron-down ml-2"></i>
-                    </button>
-                    <div id="filterStatusMenu" class="dropdown-menu">
-                        <button data-value="all">All Status</button>
-                        <button data-value="healthy">Healthy (< 2s)</button>
-                        <button data-value="warning">Warning (2-5s)</button>
-                        <button data-value="critical">Critical (> 5s)</button>
+                <div class="metric-card yellow">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Avg Response</p>
+                            <p id="avgResponse" class="metric-value yellow">0ms</p>
+                        </div>
+                        <i class="fas fa-clock metric-icon yellow"></i>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- API Table -->
-        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl   overflow-hidden">
-            <div class="overflow-x-auto scrollbar-custom">
-                <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-hashtag mr-2"></i>API Name
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Avg Time
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-compress-alt mr-2"></i>Min
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-expand-alt mr-2"></i>Max
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-chart-bar mr-2"></i>P90
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-chart-line mr-2"></i>P95
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-percentage mr-2"></i>Success Rate
-                            </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                <i class="fas fa-info-circle mr-2"></i>Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="apiTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <!-- Data will be populated here -->
-                    </tbody>
-                </table>
+            <!-- Filter and Search -->
+            <div class="filter-section">
+                <div class="filter-container">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search APIs by name or URL..." />
+                    </div>
+                    <div class="dropdown-container">
+                        <button id="filterStatusTrigger" class="dropdown-trigger">
+                            <span id="filterStatusLabel">All Status</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="filterStatusMenu" class="dropdown-menu">
+                            <button data-value="all">All Status</button>
+                            <button data-value="healthy">Healthy (< 2s)</button>
+                            <button data-value="warning">Warning (2-5s)</button>
+                            <button data-value="critical">Critical (> 5s)</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Performance Issues Section -->
-        <div id="issuesSection" class="mt-8 theme-transition bg-white dark:bg-gray-800 rounded-xl   p-6">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                Critical Performance Issues
-            </h2>
-            <div id="issuesList" class="space-y-4">
-                <!-- Issues will be populated here -->
+            <!-- API Table -->
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> API Name</th>
+                                <th><i class="fas fa-tachometer-alt"></i> Avg Time</th>
+                                <th><i class="fas fa-compress-alt"></i> Min</th>
+                                <th><i class="fas fa-expand-alt"></i> Max</th>
+                                <th><i class="fas fa-chart-bar"></i> P90</th>
+                                <th><i class="fas fa-chart-line"></i> P95</th>
+                                <th><i class="fas fa-percentage"></i> Success Rate</th>
+                                <th><i class="fas fa-info-circle"></i> Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="apiTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Performance Issues Section -->
+            <div id="issuesSection" class="issues-section">
+                <h2 class="issues-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Critical Performance Issues
+                </h2>
+                <div id="issuesList" class="issues-list">
+                    <!-- Issues will be populated here -->
+                </div>
             </div>
         </div>
     </main>
@@ -406,21 +911,21 @@
         // Theme Toggle Fix
         function initTheme() {
             const themeToggle = document.getElementById("themeToggle");
-            const htmlElement = document.documentElement;
+            const bodyElement = document.body;
 
             const savedTheme = localStorage.getItem("theme");
             if (savedTheme === "dark") {
-                htmlElement.classList.add("dark");
+                bodyElement.classList.add("dark");
             } else {
-                htmlElement.classList.remove("dark");
+                bodyElement.classList.remove("dark");
             }
 
             themeToggle.addEventListener("click", () => {
-                if (htmlElement.classList.contains("dark")) {
-                    htmlElement.classList.remove("dark");
+                if (bodyElement.classList.contains("dark")) {
+                    bodyElement.classList.remove("dark");
                     localStorage.setItem("theme", "light");
                 } else {
-                    htmlElement.classList.add("dark");
+                    bodyElement.classList.add("dark");
                     localStorage.setItem("theme", "dark");
                 }
             });
@@ -479,9 +984,9 @@
             } catch (error) {
                 console.error("Error loading data:", error);
                 document.getElementById("loading").innerHTML = `
-                    <div class="text-center">
-                        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
-                        <p class="text-red-600 dark:text-red-400">Error loading data. Please ensure api.data.json is in the same directory.</p>
+                    <div class="loading-content">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--red-500); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--red-600);">Error loading data. Please ensure api.data.json is in the same directory.</p>
                     </div>
                 `;
             }
@@ -514,21 +1019,19 @@
 
             if (time > 5000 || rate < 50) {
                 return {
-                    class: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+                    class: "critical",
                     icon: "fa-times-circle",
                     text: "Critical",
                 };
             } else if (time > 2000 || rate < 80) {
                 return {
-                    class:
-                        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+                    class: "warning",
                     icon: "fa-exclamation-triangle",
                     text: "Warning",
                 };
             } else {
                 return {
-                    class:
-                        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+                    class: "healthy",
                     icon: "fa-check-circle",
                     text: "Healthy",
                 };
@@ -547,43 +1050,41 @@
                 const successRate = api.statusCheck.successRate || "100%";
 
                 const row = document.createElement("tr");
-                row.className =
-                    "row-hover theme-transition bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700";
                 row.innerHTML = `
-                    <td class="px-6 py-4">
-                        <div class="flex flex-col">
-                            <span class="font-semibold text-gray-900 dark:text-gray-100">${api.apiName}</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate max-w-xs" title="${api.apiUrl}">
-                                <i class="fas fa-link mr-1"></i>${api.apiUrl}
+                    <td>
+                        <div class="api-name-cell">
+                            <span class="api-name">${api.apiName}</span>
+                            <span class="api-url" title="${api.apiUrl}">
+                                <i class="fas fa-link"></i> ${api.apiUrl}
                             </span>
                         </div>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400">${api.avgResTime}</span>
+                    <td>
+                        <span class="time-value avg">${api.avgResTime}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-mono text-sm text-green-600 dark:text-green-400">${api.minResTime}</span>
+                    <td>
+                        <span class="time-value min">${api.minResTime}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-mono text-sm text-red-600 dark:text-red-400">${api.maxResTime}</span>
+                    <td>
+                        <span class="time-value max">${api.maxResTime}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-mono text-sm text-gray-700 dark:text-gray-300">${api.p90}</span>
+                    <td>
+                        <span class="time-value neutral">${api.p90}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-mono text-sm text-gray-700 dark:text-gray-300">${api.p95}</span>
+                    <td>
+                        <span class="time-value neutral">${api.p95}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center">
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
-                                <div class="bg-green-500 h-2 rounded-full" style="width: ${successRate}"></div>
+                    <td>
+                        <div class="success-rate-cell">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${successRate}"></div>
                             </div>
-                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">${successRate}</span>
+                            <span class="success-rate-text">${successRate}</span>
                         </div>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="status-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${statusInfo.class}">
-                            <i class="fas ${statusInfo.icon} mr-1"></i>
+                    <td>
+                        <span class="status-badge ${statusInfo.class}">
+                            <i class="fas ${statusInfo.icon}"></i>
                             ${statusInfo.text}
                         </span>
                     </td>
@@ -598,22 +1099,21 @@
 
             if (issues.length === 0) {
                 issuesList.innerHTML =
-                    '<p class="text-gray-600 dark:text-gray-400">No critical issues detected. All APIs are performing well!</p>';
+                    '<p style="color: var(--text-secondary);">No critical issues detected. All APIs are performing well!</p>';
                 return;
             }
 
             issues.forEach((issue) => {
                 const issueCard = document.createElement("div");
-                issueCard.className =
-                    "theme-transition bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded-lg";
+                issueCard.className = "issue-card";
                 issueCard.innerHTML = `
-                    <div class="flex items-start">
-                        <i class="fas fa-exclamation-triangle text-red-500 mt-1 mr-3"></i>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-gray-900 dark:text-gray-100">${issue.apiName}</h3>
-                            <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">${issue.issue}</p>
-                            <p class="text-sm text-red-600 dark:text-red-400 mt-2">
-                                <i class="fas fa-chart-line mr-1"></i>Success Rate: ${issue.successRate}
+                    <div class="issue-content">
+                        <i class="fas fa-exclamation-triangle issue-icon"></i>
+                        <div class="issue-info">
+                            <h3 class="issue-name">${issue.apiName}</h3>
+                            <p class="issue-description">${issue.issue}</p>
+                            <p class="issue-rate">
+                                <i class="fas fa-chart-line"></i> Success Rate: ${issue.successRate}
                             </p>
                         </div>
                     </div>

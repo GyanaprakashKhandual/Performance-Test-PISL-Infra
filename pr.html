@@ -5,18 +5,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Procurement Test Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwindcss.config = {
-            darkMode: "class",
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: "Inter", sans-serif;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border-color: #e5e7eb;
+            --border-color-dark: #d1d5db;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --yellow-500: #eab308;
+            --yellow-600: #ca8a04;
+            --amber-500: #f59e0b;
+        }
+
+        body.dark {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --border-color: #374151;
+            --border-color-dark: #4b5563;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .fade-in {
@@ -28,21 +71,16 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .theme-transition {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
         .loading-spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(59, 130, 246, 0.3);
             border-radius: 50%;
-            border-top: 3px solid #3b82f6;
+            border-top: 3px solid var(--blue-600);
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
@@ -52,7 +90,6 @@
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
@@ -64,7 +101,7 @@
 
         .metric-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
         .scrollbar-custom::-webkit-scrollbar {
@@ -77,24 +114,24 @@
             border-radius: 10px;
         }
 
+        body.dark .scrollbar-custom::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
         .scrollbar-custom::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 10px;
+        }
+
+        body.dark .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #6b7280;
         }
 
         .scrollbar-custom::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
 
-        .dark .scrollbar-custom::-webkit-scrollbar-track {
-            background: #374151;
-        }
-
-        .dark .scrollbar-custom::-webkit-scrollbar-thumb {
-            background: #6b7280;
-        }
-
-        .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+        body.dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
             background: #9ca3af;
         }
 
@@ -104,7 +141,7 @@
 
         .test-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: var(--shadow-hover);
         }
 
         .expand-btn {
@@ -133,12 +170,12 @@
             color: #991b1b;
         }
 
-        .dark .status-passed {
+        body.dark .status-passed {
             background-color: #064e3b;
             color: #86efac;
         }
 
-        .dark .status-failed {
+        body.dark .status-failed {
             background-color: #7f1d1d;
             color: #fca5a5;
         }
@@ -151,7 +188,7 @@
             overflow: hidden;
         }
 
-        .dark .progress-bar {
+        body.dark .progress-bar {
             background-color: #374151;
         }
 
@@ -160,33 +197,650 @@
             background: linear-gradient(90deg, #3b82f6, #06b6d4);
             transition: width 0.5s ease;
         }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-icon {
+            font-size: 1.875rem;
+            color: var(--blue-600);
+        }
+
+        body.dark .header-icon {
+            color: var(--blue-500);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        body.dark .btn-secondary {
+            background-color: var(--bg-tertiary);
+        }
+
+        body.dark .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+        }
+
+        .btn-icon i {
+            font-size: 1.25rem;
+        }
+
+        .dark-icon {
+            display: none;
+        }
+
+        body.dark .light-icon {
+            display: none;
+        }
+
+        body.dark .dark-icon {
+            display: inline;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .metric-card.blue {
+            border-left: 4px solid var(--blue-500);
+        }
+
+        .metric-card.green {
+            border-left: 4px solid var(--green-500);
+        }
+
+        .metric-card.red {
+            border-left: 4px solid var(--red-500);
+        }
+
+        .metric-card.yellow {
+            border-left: 4px solid var(--yellow-500);
+        }
+
+        .metric-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-info p:first-child {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .metric-value.blue {
+            color: var(--blue-600);
+        }
+
+        body.dark .metric-value.blue {
+            color: var(--blue-500);
+        }
+
+        .metric-value.green {
+            color: var(--green-600);
+        }
+
+        body.dark .metric-value.green {
+            color: var(--green-500);
+        }
+
+        .metric-value.red {
+            color: var(--red-600);
+        }
+
+        body.dark .metric-value.red {
+            color: var(--red-500);
+        }
+
+        .metric-value.yellow {
+            color: var(--yellow-600);
+        }
+
+        body.dark .metric-value.yellow {
+            color: var(--yellow-500);
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+
+        .metric-icon.blue {
+            color: var(--blue-500);
+        }
+
+        .metric-icon.green {
+            color: var(--green-500);
+        }
+
+        .metric-icon.red {
+            color: var(--red-500);
+        }
+
+        .metric-icon.yellow {
+            color: var(--yellow-500);
+        }
+
+        /* Critical Issues Section */
+        .issues-section {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .issues-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .issues-title i {
+            color: var(--red-500);
+            margin-right: 0.75rem;
+        }
+
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--red-500);
+            border-radius: 0.5rem;
+        }
+
+        body.dark .issue-item {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .issue-item i {
+            color: var(--red-500);
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .issue-text {
+            color: var(--text-primary);
+        }
+
+        body.dark .issue-text {
+            color: var(--text-secondary);
+        }
+
+        /* Test Results Section */
+        .test-results-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            color: var(--blue-500);
+            margin-right: 0.75rem;
+        }
+
+        .test-results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .test-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .test-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .test-header-left {
+            flex: 1;
+        }
+
+        .test-name-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-page-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .test-file-name {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .expand-btn i {
+            color: var(--text-secondary);
+        }
+
+        .test-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-item p:first-child {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-item p:last-child {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .metric-item.blue p:last-child {
+            color: var(--blue-600);
+        }
+
+        body.dark .metric-item.blue p:last-child {
+            color: var(--blue-500);
+        }
+
+        .metric-item.green p:last-child {
+            color: var(--green-600);
+        }
+
+        body.dark .metric-item.green p:last-child {
+            color: var(--green-500);
+        }
+
+        .metric-item.red p:last-child {
+            color: var(--red-600);
+        }
+
+        body.dark .metric-item.red p:last-child {
+            color: var(--red-500);
+        }
+
+        .metric-item.yellow p:last-child {
+            color: var(--yellow-600);
+        }
+
+        body.dark .metric-item.yellow p:last-child {
+            color: var(--yellow-500);
+        }
+
+        .expand-details {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .details-section p:first-child {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .endpoints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .endpoint-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 0.375rem;
+        }
+
+        body.dark .endpoint-item {
+            background-color: var(--bg-tertiary);
+        }
+
+        .endpoint-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .endpoint-method {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--blue-600);
+            border-radius: 0.25rem;
+        }
+
+        body.dark .endpoint-method {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--blue-500);
+        }
+
+        .config-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .config-value {
+            font-weight: 600;
+        }
+
+        .test-results-box {
+            background-color: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        body.dark .test-results-box {
+            background-color: var(--bg-tertiary);
+        }
+
+        .test-results-box > p:first-child {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .results-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .result-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-item-name {
+            font-size: 0.875rem;
+        }
+
+        .result-item-rate {
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .issues-summary-box {
+            background-color: rgba(245, 158, 11, 0.05);
+            border-left: 4px solid var(--amber-500);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        body.dark .issues-summary-box {
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        .issues-summary-box > p:first-child {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .issues-summary-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .issues-summary-list li {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        body.dark .issues-summary-list li {
+            color: var(--text-secondary);
+        }
+
+        /* Recommendation Section */
+        .recommendation-section {
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .recommendation-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-title i {
+            color: var(--amber-500);
+            margin-right: 0.75rem;
+        }
+
+        .recommendation-text {
+            color: var(--text-primary);
+            line-height: 1.625;
+        }
+
+        body.dark .recommendation-text {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .test-metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 
-<body class="theme-transition bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body>
     <!-- Header -->
-    <header class="theme-transition bg-white dark:bg-gray-800 top-0 border-b border-gray-200 dark:border-gray-700">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-flask text-3xl text-blue-600 dark:text-blue-400"></i>
-                    <div>
-                        <h1 class="text-2xl font-bold">Procurement Test Dashboard</h1>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Performance Test Results & Analysis
-                        </p>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <i class="fas fa-flask header-icon"></i>
+                    <div class="header-title">
+                        <h1>Procurement Test Dashboard</h1>
+                        <p>Performance Test Results & Analysis</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button id="backBtn"
-                        class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium transition-all duration-300 flex items-center space-x-2">
+                <div class="header-right">
+                    <button id="backBtn" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i>
                         <span>Back</span>
                     </button>
-                    <button id="themeToggle"
-                        class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
-                        <i class="fas fa-moon text-xl dark:hidden"></i>
-                        <i class="fas fa-sun text-xl hidden dark:inline"></i>
+                    <button id="themeToggle" class="btn btn-secondary btn-icon">
+                        <i class="fas fa-moon light-icon"></i>
+                        <i class="fas fa-sun dark-icon"></i>
                     </button>
                 </div>
             </div>
@@ -194,109 +848,91 @@
     </header>
 
     <!-- Loading State -->
-    <div id="loading" class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Loading Test Results...</p>
+    <div id="loading" class="loading-container">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading Test Results...</p>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main id="mainContent" class="hidden container mx-auto px-6 py-8">
-        <!-- Summary Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-blue-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Total Tests
-                        </p>
-                        <p id="totalTests" class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-                            0
-                        </p>
+    <main id="mainContent" class="hidden">
+        <div class="container">
+            <!-- Summary Section -->
+            <div class="stats-grid">
+                <div class="metric-card blue">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Total Tests</p>
+                            <p id="totalTests" class="metric-value blue">0</p>
+                        </div>
+                        <i class="fas fa-flask metric-icon blue"></i>
                     </div>
-                    <i class="fas fa-flask text-4xl text-blue-500 opacity-20"></i>
+                </div>
+
+                <div class="metric-card green">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Passed</p>
+                            <p id="passedTests" class="metric-value green">0</p>
+                        </div>
+                        <i class="fas fa-check-circle metric-icon green"></i>
+                    </div>
+                </div>
+
+                <div class="metric-card red">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Failed</p>
+                            <p id="failedTests" class="metric-value red">0</p>
+                        </div>
+                        <i class="fas fa-times-circle metric-icon red"></i>
+                    </div>
+                </div>
+
+                <div class="metric-card yellow">
+                    <div class="metric-content">
+                        <div class="metric-info">
+                            <p>Test Date</p>
+                            <p id="testDate" class="metric-value yellow">-</p>
+                        </div>
+                        <i class="fas fa-calendar metric-icon yellow"></i>
+                    </div>
                 </div>
             </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-green-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Passed
-                        </p>
-                        <p id="passedTests" class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
-                            0
-                        </p>
-                    </div>
-                    <i class="fas fa-check-circle text-4xl text-green-500 opacity-20"></i>
+            <!-- Critical Issues -->
+            <div class="issues-section">
+                <h2 class="issues-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Critical Issues
+                </h2>
+                <div id="issuesList" class="issues-list">
+                    <!-- Issues will be populated here -->
                 </div>
             </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-red-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Failed
-                        </p>
-                        <p id="failedTests" class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">
-                            0
-                        </p>
-                    </div>
-                    <i class="fas fa-times-circle text-4xl text-red-500 opacity-20"></i>
+            <!-- Test Results -->
+            <div class="test-results-section">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    Test Results by Page
+                </h2>
+                <div id="testResultsList" class="test-results-list">
+                    <!-- Test cards will be populated here -->
                 </div>
             </div>
 
-            <div
-                class="metric-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-yellow-500">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            Test Date
-                        </p>
-                        <p id="testDate" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
-                            -
-                        </p>
-                    </div>
-                    <i class="fas fa-calendar text-4xl text-yellow-500 opacity-20"></i>
-                </div>
+            <!-- Recommendation Section -->
+            <div class="recommendation-section">
+                <h2 class="recommendation-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Recommendations
+                </h2>
+                <p id="recommendation" class="recommendation-text">
+                    <!-- Recommendation will be populated here -->
+                </p>
             </div>
-        </div>
-
-        <!-- Critical Issues -->
-        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                Critical Issues
-            </h2>
-            <div id="issuesList" class="space-y-3">
-                <!-- Issues will be populated here -->
-            </div>
-        </div>
-
-        <!-- Test Results -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-6 flex items-center">
-                <i class="fas fa-list text-blue-500 mr-3"></i>
-                Test Results by Page
-            </h2>
-            <div id="testResultsList" class="space-y-4">
-                <!-- Test cards will be populated here -->
-            </div>
-        </div>
-
-        <!-- Recommendation Section -->
-        <div class="theme-transition bg-white dark:bg-gray-800 rounded-xl p-6">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fas fa-lightbulb text-amber-500 mr-3"></i>
-                Recommendations
-            </h2>
-            <p id="recommendation" class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                <!-- Recommendation will be populated here -->
-            </p>
         </div>
     </main>
 
@@ -308,17 +944,17 @@
 
             const savedTheme = localStorage.getItem("theme");
             if (savedTheme === "dark") {
-                htmlElement.classList.add("dark");
+                document.body.classList.add("dark");
             } else {
-                htmlElement.classList.remove("dark");
+                document.body.classList.remove("dark");
             }
 
             themeToggle.addEventListener("click", () => {
-                if (htmlElement.classList.contains("dark")) {
-                    htmlElement.classList.remove("dark");
+                if (document.body.classList.contains("dark")) {
+                    document.body.classList.remove("dark");
                     localStorage.setItem("theme", "light");
                 } else {
-                    htmlElement.classList.add("dark");
+                    document.body.classList.add("dark");
                     localStorage.setItem("theme", "dark");
                 }
             });
@@ -348,9 +984,9 @@
             } catch (error) {
                 console.error("Error loading data:", error);
                 document.getElementById("loading").innerHTML = `
-                    <div class="text-center">
-                        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
-                        <p class="text-red-600 dark:text-red-400">Error loading test data. Please ensure pr.api.json is in the same directory.</p>
+                    <div class="loading-content">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--red-500); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--red-600);">Error loading test data. Please ensure pr.api.json is in the same directory.</p>
                     </div>
                 `;
             }
@@ -369,11 +1005,10 @@
 
             issues.forEach((issue) => {
                 const issueDiv = document.createElement("div");
-                issueDiv.className =
-                    "flex items-start p-4 theme-transition bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg";
+                issueDiv.className = "issue-item";
                 issueDiv.innerHTML = `
-                    <i class="fas fa-circle-dot text-red-500 mr-3 mt-1 flex-shrink-0"></i>
-                    <span class="text-gray-700 dark:text-gray-300">${issue}</span>
+                    <i class="fas fa-circle-dot"></i>
+                    <span class="issue-text">${issue}</span>
                 `;
                 issuesList.appendChild(issueDiv);
             });
@@ -388,114 +1023,111 @@
                 const statusIcon = test.overallResult === "PASSED" ? "fa-check-circle" : "fa-times-circle";
 
                 const testCard = document.createElement("div");
-                testCard.className =
-                    "test-card theme-transition bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700";
+                testCard.className = "test-card";
                 testCard.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-3 mb-2">
-                                <h3 class="text-lg font-bold">${test.pageName}</h3>
+                    <div class="test-card-header">
+                        <div class="test-header-left">
+                            <div class="test-name-row">
+                                <h3 class="test-page-name">${test.pageName}</h3>
                                 <span class="status-pill ${statusClass}">
-                                    <i class="fas ${statusIcon} mr-1"></i>
+                                    <i class="fas ${statusIcon}"></i>
                                     ${test.overallResult}
                                 </span>
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">${test.fileName}</p>
+                            <p class="test-file-name">${test.fileName}</p>
                         </div>
                         <button class="expand-btn toggle-expand" data-index="${index}">
-                            <i class="fas fa-chevron-down text-gray-500"></i>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Avg Response</p>
-                            <p class="text-lg font-bold text-blue-600 dark:text-blue-400">${test.performanceMetrics.avgResponseTime}</p>
+                    <div class="test-metrics-grid">
+                        <div class="metric-item blue">
+                            <p>Avg Response</p>
+                            <p>${test.performanceMetrics.avgResponseTime}</p>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Requests</p>
-                            <p class="text-lg font-bold text-green-600 dark:text-green-400">${test.testConfiguration.totalRequests}</p>
+                        <div class="metric-item green">
+                            <p>Requests</p>
+                            <p>${test.testConfiguration.totalRequests}</p>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">Errors</p>
-                            <p class="text-lg font-bold text-red-600 dark:text-red-400">${test.errors.total}</p>
+                        <div class="metric-item red">
+                            <p>Errors</p>
+                            <p>${test.errors.total}</p>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold">RPS</p>
-                            <p class="text-lg font-bold text-yellow-600 dark:text-yellow-400">${test.performanceMetrics.requestsPerSecond}</p>
+                        <div class="metric-item yellow">
+                            <p>RPS</p>
+                            <p>${test.performanceMetrics.requestsPerSecond}</p>
                         </div>
                     </div>
 
                     <div class="hidden expand-details">
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Endpoints</p>
-                                    <div class="space-y-2">
-                                        ${test.endpoints.map(ep => `
-                                            <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
-                                                <span class="text-sm font-medium">${ep.apiName}</span>
-                                                <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded">${ep.method}</span>
-                                            </div>
-                                        `).join("")}
-                                    </div>
+                        <div class="details-grid">
+                            <div class="details-section">
+                                <p>Endpoints</p>
+                                <div class="endpoints-list">
+                                    ${test.endpoints.map(ep => `
+                                        <div class="endpoint-item">
+                                            <span class="endpoint-name">${ep.apiName}</span>
+                                            <span class="endpoint-method">${ep.method}</span>
+                                        </div>
+                                    `).join("")}
                                 </div>
-                                <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Configuration</p>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span>Duration:</span>
-                                            <span class="font-semibold">${test.testConfiguration.duration}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Max VUs:</span>
-                                            <span class="font-semibold">${test.testConfiguration.maxVUs}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Iterations:</span>
-                                            <span class="font-semibold">${test.testConfiguration.totalIterations}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Actual Duration:</span>
-                                            <span class="font-semibold">${test.testConfiguration.actualDuration}</span>
-                                        </div>
+                            </div>
+                            <div class="details-section">
+                                <p>Configuration</p>
+                                <div class="config-list">
+                                    <div class="config-item">
+                                        <span>Duration:</span>
+                                        <span class="config-value">${test.testConfiguration.duration}</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span>Max VUs:</span>
+                                        <span class="config-value">${test.testConfiguration.maxVUs}</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span>Iterations:</span>
+                                        <span class="config-value">${test.testConfiguration.totalIterations}</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span>Actual Duration:</span>
+                                        <span class="config-value">${test.testConfiguration.actualDuration}</span>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded mb-4">
-                                <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-3">Test Results</p>
-                                <div class="space-y-3">
-                                    ${test.testResults && Object.entries(test.testResults).map(([key, value]) => {
-                                        if (typeof value === "object" && value.status) {
-                                            return `
-                                                <div>
-                                                    <div class="flex justify-between mb-1">
-                                                        <span class="text-sm">${value.name}</span>
-                                                        <span class="text-xs font-bold">${value.passRate}</span>
-                                                    </div>
-                                                    <div class="progress-bar">
-                                                        <div class="progress-fill" style="width: ${value.passRate}"></div>
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }
-                                        return "";
-                                    }).join("")}
-                                </div>
-                            </div>
-
-                            ${test.issuesSummary ? `
-                                <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 rounded">
-                                    <p class="text-xs text-gray-600 dark:text-gray-400 uppercase font-semibold mb-2">Issues Found</p>
-                                    <ul class="space-y-1">
-                                        ${test.issuesSummary.map(issue => `
-                                            <li class="text-sm text-gray-700 dark:text-gray-300">• ${issue}</li>
-                                        `).join("")}
-                                    </ul>
-                                </div>
-                            ` : ""}
                         </div>
+
+                        <div class="test-results-box">
+                            <p>Test Results</p>
+                            <div class="results-items">
+                                ${test.testResults && Object.entries(test.testResults).map(([key, value]) => {
+                                    if (typeof value === "object" && value.status) {
+                                        return `
+                                            <div>
+                                                <div class="result-item-header">
+                                                    <span class="result-item-name">${value.name}</span>
+                                                    <span class="result-item-rate">${value.passRate}</span>
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: ${value.passRate}"></div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }
+                                    return "";
+                                }).join("")}
+                            </div>
+                        </div>
+
+                        ${test.issuesSummary ? `
+                            <div class="issues-summary-box">
+                                <p>Issues Found</p>
+                                <ul class="issues-summary-list">
+                                    ${test.issuesSummary.map(issue => `
+                                        <li>• ${issue}</li>
+                                    `).join("")}
+                                </ul>
+                            </div>
+                        ` : ""}
                     </div>
                 `;
 
